@@ -31,8 +31,9 @@ export default class Server {
         this.io.on('connection', client => {
             console.log('connected client   ', socket.eventDataTime());
 
+            socket.connectClient(client);
+            socket.configUser(client);
             socket.message(client, this.io);
-
             socket.disconnect(client);
         });
     }
