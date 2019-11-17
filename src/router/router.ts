@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import Server from "../classes/server";
+import { connectedUsers } from "../sockets/socket";
 
 const router = Router();
 
@@ -17,6 +18,21 @@ router.get("/messages/:id", (req: Request, res: Response) => {
     message: "Its OK",
     data: id
   });
+});
+
+router.get("/users", (req: Request, res: Response) => {
+  const server = Server.instance;
+  server.io.clients((err: any, clients: string[]) => {
+    if (err) {
+      return res.json({ ok: false, err });
+    }
+
+    res.json({ ok: true, clients });
+  });
+});
+
+router.get("/users/detail", (req: Request, res: Response) => {
+  res.json({ ok: true, clients: connectedUsers.getUsers() });
 });
 
 router.post("/messages", (req: Request, res: Response) => {
